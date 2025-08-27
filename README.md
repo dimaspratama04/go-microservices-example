@@ -3,7 +3,7 @@ SIMPLE CASE MICROSERVICES BACKEND USE GOLANG
 ### SUMMARY
 
 _auth_ dir -> contains simple logic API wich can consume GET, POST method <br />
-_payment_ dir-> contains simple logic API wich can consume GET, POST method
+_payment_ dir -> contains simple logic API wich can consume GET, POST method
 
 ### PREREQUISITE
 
