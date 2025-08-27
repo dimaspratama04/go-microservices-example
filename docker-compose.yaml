@@ -1,0 +1,22 @@
+services:
+  api-payment:
+    build:
+      context: ./payment
+    container_name: api-payment
+    ports:
+      - 8081:8081 # base on uses port
+    networks:
+      - microservices-net
+
+  auth-payment:
+    build:
+      context: ./auth
+    container_name: auth-payment
+    ports:
+      - 8082:8082 # base on uses port
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
+    driver: bridge
