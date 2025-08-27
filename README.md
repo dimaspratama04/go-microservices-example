@@ -1,4 +1,4 @@
-SIMPLE CASE MICROSERVICES BACKEND USE GOLANG
+bSIMPLE CASE MICROSERVICES BACKEND USE GOLANG
 
 ### PREREQUISITE
 
@@ -7,7 +7,7 @@ SIMPLE CASE MICROSERVICES BACKEND USE GOLANG
 
 ### API DOCS
 
-POST /payment
+POST /payment <br />
 [{
 "id": 102,
 "title": "Smartwatch XYZ",
@@ -18,7 +18,7 @@ POST /payment
 "quantity": 50
 }]
 
-POST /auth
+POST /auth <br />
 {
 "id": 1,
 "name": "dimas",
