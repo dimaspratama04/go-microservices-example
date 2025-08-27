@@ -28,7 +28,7 @@ func setCORSHeaders(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
-func paymentHandler(w http.ResponseWriter, r *http.Request) {
+func authHandler(w http.ResponseWriter, r *http.Request) {
 	setCORSHeaders(w)
 
 	if r.Method != http.MethodGet && r.Method != http.MethodPost {
@@ -87,7 +87,7 @@ func main() {
 		port = "8082"
 	}
 
-	http.HandleFunc("/auth", paymentHandler)
+	http.HandleFunc("/", authHandler)
 
 	fmt.Printf("Server listening on port %s...\n", port)
 

@@ -111,7 +111,7 @@ func main() {
 		port = "8081"
 	}
 
-	http.HandleFunc("/payment", paymentHandler)
+	http.HandleFunc("/", paymentHandler)
 
 	fmt.Printf("Server listening on port %s...\n", port)
 
