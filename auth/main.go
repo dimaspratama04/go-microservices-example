@@ -28,6 +28,24 @@ func setCORSHeaders(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
+func httpSuccessHandler(w http.ResponseWriter, message string, statusCode int) {
+	resp := Response{
+		Message: message,
+		Status:  statusCode,
+	}
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(resp)
+}
+
+func httpErrorHandler(w http.ResponseWriter, message string, statusCode int) {
+	resp := Response{
+		Message: message,
+		Status:  statusCode,
+	}
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(resp)
+}
+
 func authHandler(w http.ResponseWriter, r *http.Request) {
 	setCORSHeaders(w)
 
@@ -52,26 +70,22 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			http.Error(w, "Failed to read request body", http.StatusBadRequest)
+			httpSuccessHandler(w, "Failed to read request body", http.StatusBadRequest)
 			return
 		}
 		defer r.Body.Close()
 
 		var accountLoggedIn LoginPayload
 		if err := json.Unmarshal(body, &accountLoggedIn); err != nil {
-			http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+			httpErrorHandler(w, "invalid JSON format", http.StatusBadRequest)
 			return
 		}
 
 		fmt.Printf("Account logged in: %+v\n", accountLoggedIn)
 
 		w.Header().Set("Content-Type", "application/json")
-		resp := Response{
-			Message: "Payment successfully",
-			Status:  http.StatusOK,
-		}
 
-		json.NewEncoder(w).Encode(resp)
+		httpSuccessHandler(w, "successfully logged in.", http.StatusOK)
 	}
 
 }
