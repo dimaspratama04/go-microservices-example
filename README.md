@@ -24,4 +24,3 @@ POST /auth
 "name": "dimas",
 "age": 20
 }
-# go-microservices-example
