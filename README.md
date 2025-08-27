@@ -1,0 +1,27 @@
+SIMPLE CASE MICROSERVICES BACKEND USE GOLANG
+
+### PREREQUISITE
+
+1. GO >= 1.24
+2. Visual Studio Code
+
+### API DOCS
+
+POST /payment
+[{
+"id": 102,
+"title": "Smartwatch XYZ",
+"price": 99.99,
+"description": "Smartwatch canggih dengan fitur detak jantung dan pelacakan tidur.",
+"category": "Elektronik",
+"image": "https://example.com/images/smartwatch.jpg",
+"quantity": 50
+}]
+
+POST /auth
+{
+"id": 1,
+"name": "dimas",
+"age": 20
+}
+# go-microservices-example
