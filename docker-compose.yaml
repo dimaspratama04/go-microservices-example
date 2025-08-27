@@ -8,10 +8,10 @@ services:
     networks:
       - microservices-net
 
-  auth-payment:
+  api-auth:
     build:
       context: ./auth
-    container_name: auth-payment
+    container_name: api-auth
     ports:
       - 8082:8082 # base on uses port
     networks:
