@@ -17,6 +17,9 @@ spec:
         - name: api-auth
           image: dimaspratama04/api-auth:v1.1.1
           resources:
+            requests:
+              cpu: "128m"
+              memory: "256Mi"
             limits:
               cpu: "256m"
               memory: "512Mi"
