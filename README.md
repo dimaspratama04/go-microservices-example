@@ -13,7 +13,7 @@ _products_ dir -> contains simple logic API wich can consume GET, POST method
 
 ### API DOCS
 
-POST /payment <br />
+POST /products <br />
 [{
 "id": 102,
 "title": "Smartwatch XYZ",
