@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-payment
+  name: api-products
   namespace: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api-payment
+      app: api-products
   template:
     metadata:
       labels:
-        app: api-payment
+        app: api-products
     spec:
       containers:
-        - name: api-payment
-          image: dimaspratama04/api-payment:v1.0.2
+        - name: api-products
+          image: dimaspratama04/api-products:v1.0.0
           resources:
-            limits: 
+            limits:
               cpu: "256m"
               memory: "512Mi"
           ports:

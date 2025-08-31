@@ -15,9 +15,9 @@ spec:
     spec:
       containers:
         - name: api-auth
-          image: dimaspratama04/api-auth:v1.0.2
+          image: dimaspratama04/api-auth:v1.1.0
           resources:
-            limits: 
+            limits:
               cpu: "256m"
               memory: "512Mi"
           ports:
