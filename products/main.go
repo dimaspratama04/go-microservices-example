@@ -8,14 +8,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
 
 type Response struct {
-	RequestId string `json:"request_id"`
-	Message   string `json:"message"`
-	Status    int    `json:"status"`
+	Message string `json:"message"`
+	Status  int    `json:"status"`
 }
 
 type Products struct {
@@ -38,9 +36,8 @@ func setCORSHeaders(w http.ResponseWriter) {
 
 func httpResponseHandler(w http.ResponseWriter, message string, statusCode int) {
 	resp := Response{
-		RequestId: uuid.NewString(),
-		Message:   message,
-		Status:    statusCode,
+		Message: message,
+		Status:  statusCode,
 	}
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(resp)
