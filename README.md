@@ -3,9 +3,8 @@ SIMPLE CASE MICROSERVICES BACKEND USE GOLANG
 ### SUMMARY
 
 _auth_ dir -> contains simple logic API wich can consume GET, POST method <br />
-_payment_ dir -> contains simple logic API wich can consume GET, POST method 
 
-*Change to kong branch if wanna try use kubernetes, and also integrated with kong api gateway*
+_products_ dir -> contains simple logic API wich can consume GET, POST method
 
 ### PREREQUISITE
 
@@ -14,7 +13,7 @@ _payment_ dir -> contains simple logic API wich can consume GET, POST method
 
 ### API DOCS
 
-POST /payment <br />
+POST /products <br />
 [{
 "id": 102,
 "title": "Smartwatch XYZ",

@@ -1,8 +1,8 @@
 services:
-  api-payment:
+  api-products:
     build:
-      context: ./payment
-    container_name: api-payment
+      context: ./products
+    container_name: api-products
     ports:
       - 8081:8081 # base on uses port
     networks:

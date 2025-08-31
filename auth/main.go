@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
 
@@ -18,8 +19,9 @@ type LoginPayload struct {
 }
 
 type Response struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
+	RequestId string `json:"request_id"`
+	Message   string `json:"message"`
+	Status    int    `json:"status"`
 }
 
 func setCORSHeaders(w http.ResponseWriter) {
@@ -28,52 +30,57 @@ func setCORSHeaders(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
-func authHandler(w http.ResponseWriter, r *http.Request) {
+func httpResponseHandler(w http.ResponseWriter, message string, statusCode int) {
+	resp := Response{
+		RequestId: uuid.NewString(),
+		Message:   message,
+		Status:    statusCode,
+	}
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(resp)
+}
+
+func homeAuthHandler(w http.ResponseWriter, r *http.Request) {
 	setCORSHeaders(w)
 
-	if r.Method != http.MethodGet && r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	if r.URL.Path != "/" {
+		httpResponseHandler(w, "path not exist.", http.StatusNotFound)
 		return
 	}
 
-	// GET HANDLER
-	if r.Method == http.MethodGet {
-		w.Header().Set("Content-Type", "application/json")
-
-		resp := Response{
-			Message: "Hello from auth services.",
-			Status:  http.StatusOK,
-		}
-
-		json.NewEncoder(w).Encode(resp)
+	if r.Method != http.MethodGet && r.Method != http.MethodOptions {
+		httpResponseHandler(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 
-	// POST HANDLER
-	if r.Method == http.MethodPost {
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, "Failed to read request body", http.StatusBadRequest)
-			return
-		}
-		defer r.Body.Close()
+	w.Header().Set("Content-Type", "application/json")
+	httpResponseHandler(w, "hello from auth services.", http.StatusOK)
+}
 
-		var accountLoggedIn LoginPayload
-		if err := json.Unmarshal(body, &accountLoggedIn); err != nil {
-			http.Error(w, "Invalid JSON format", http.StatusBadRequest)
-			return
-		}
-
-		fmt.Printf("Account logged in: %+v\n", accountLoggedIn)
-
-		w.Header().Set("Content-Type", "application/json")
-		resp := Response{
-			Message: "Payment successfully",
-			Status:  http.StatusOK,
-		}
-
-		json.NewEncoder(w).Encode(resp)
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		httpResponseHandler(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		httpResponseHandler(w, "failed to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	var accountLoggedIn LoginPayload
+	if err := json.Unmarshal(body, &accountLoggedIn); err != nil {
+		httpResponseHandler(w, "invalid JSON format.", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("Account logged in: %+v\n", accountLoggedIn)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	httpResponseHandler(w, "successfully logged in.", http.StatusOK)
 }
 
 func main() {
@@ -87,7 +94,8 @@ func main() {
 		port = "8082"
 	}
 
-	http.HandleFunc("/", authHandler)
+	http.HandleFunc("/", homeAuthHandler)
+	http.HandleFunc("/login", loginHandler)
 
 	fmt.Printf("Server listening on port %s...\n", port)
 

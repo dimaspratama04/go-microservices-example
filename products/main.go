@@ -8,19 +8,17 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
 
-type RequestBody struct {
-	Products []Product `json:"products"`
-}
-
 type Response struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
+	RequestId string `json:"request_id"`
+	Message   string `json:"message"`
+	Status    int    `json:"status"`
 }
 
-type Product struct {
+type Products struct {
 	ID          int     `json:"id"`
 	Title       string  `json:"title"`
 	Price       float64 `json:"price"`
@@ -38,66 +36,62 @@ func setCORSHeaders(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
-// Handle success response
-func handleSuccess(w http.ResponseWriter, message string, statusCode int) {
+func httpResponseHandler(w http.ResponseWriter, message string, statusCode int) {
 	resp := Response{
-		Message: message,
-		Status:  statusCode,
+		RequestId: uuid.NewString(),
+		Message:   message,
+		Status:    statusCode,
 	}
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(resp)
 }
 
-// Handle error response
-func handleError(w http.ResponseWriter, message string, statusCode int) {
-	resp := Response{
-		Message: message,
-		Status:  statusCode,
-	}
-	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(resp)
-}
-
-func paymentHandler(w http.ResponseWriter, r *http.Request) {
+func homeProductsHandler(w http.ResponseWriter, r *http.Request) {
 	setCORSHeaders(w)
 
-	if r.Method != http.MethodPost && r.Method != http.MethodGet {
-		handleError(w, "Method not allowed", http.StatusMethodNotAllowed)
+	if r.URL.Path != "/" {
+		httpResponseHandler(w, "path not exist.", http.StatusNotFound)
 		return
 	}
 
-	// GET HANDLER
-	if r.Method == http.MethodGet {
-		w.Header().Set("Content-Type", "application/json")
-
-		resp := Response{
-			Message: "Hello from payment services.",
-			Status:  http.StatusOK,
-		}
-
-		json.NewEncoder(w).Encode(resp)
+	if r.Method != http.MethodOptions && r.Method != http.MethodGet {
+		httpResponseHandler(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 
-	// POST HANDLER
+	if r.Method == http.MethodGet {
+		w.Header().Set("Content-Type", "application/json")
+		httpResponseHandler(w, "hello from products services.", http.StatusOK)
+	}
+
+}
+
+func payProductsHandler(w http.ResponseWriter, r *http.Request) {
+	setCORSHeaders(w)
+
+	if r.Method != http.MethodPost {
+		httpResponseHandler(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	if r.Method == http.MethodPost {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			handleError(w, "Failed to read request body", http.StatusBadRequest)
+			httpResponseHandler(w, "failed to read request body", http.StatusBadRequest)
 			return
 		}
 		defer r.Body.Close()
 
-		var products []Product
+		var products []Products
 		if err := json.Unmarshal(body, &products); err != nil {
-			handleError(w, "invalid JSON format: make sure use array payload", http.StatusBadRequest)
+			httpResponseHandler(w, "invalid JSON format.", http.StatusBadRequest)
 			return
 		}
 
 		fmt.Printf("Received products: %+v\n", products)
 
-		handleSuccess(w, "payment success.", http.StatusOK)
+		httpResponseHandler(w, "products payment sucessfully.", http.StatusOK)
 	}
-
 }
 
 func main() {
@@ -111,7 +105,8 @@ func main() {
 		port = "8081"
 	}
 
-	http.HandleFunc("/", paymentHandler)
+	http.HandleFunc("/", homeProductsHandler)
+	http.HandleFunc("/pay", payProductsHandler)
 
 	fmt.Printf("Server listening on port %s...\n", port)
 

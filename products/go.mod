@@ -1,4 +1,4 @@
-module auth-fearpedia
+module payment-fearpedia
 
 go 1.24.2
 
