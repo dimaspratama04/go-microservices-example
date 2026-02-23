@@ -1,0 +1,28 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyPatchPolicy
+metadata:
+  name: custom-429-body
+  namespace: backend
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: backend-route
+  patches:
+  - type: JSONPatch
+    jsonPatch:
+      type: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+      value:
+        response_headers_to_add:
+        - append: false
+          header:
+            key: content-type
+            value: application/json
+        status:
+          code: 429
+        body:
+          inline_string: |
+            {
+              "error": "rate_limit_exceeded",
+              "message": "Too many requests. Please retry later."
+            }
