@@ -9,8 +9,9 @@ spec:
     kind: HTTPRoute
     name: backend-route
   rateLimit:
-    global:
+    type: Local
+    local:
       rules:
       - limit:
-          requests: 1
+          requests: 2
           unit: Second
