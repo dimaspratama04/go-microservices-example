@@ -3,9 +3,12 @@ kind: Service
 metadata:
   name: api-auth
   namespace: backend
+  labels:
+    app: api-auth
 spec:
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8082
       targetPort: 8082
   selector:
