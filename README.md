@@ -1,5 +1,14 @@
 SIMPLE CASE MICROSERVICES BACKEND USE GOLANG
 
+### BRANCH DETAIL
+
+Because this project is for personal RnD, this detail source code for each branch
+
+- main -> simple usecase microservices, and deployed with docker compose
+- kong -> add deployment for kubernetes, and use kong for gateway
+- envoy -> add deployment for kubernetes, and use envoy for gateway
+- envoy-keda -> add deployment for kubernetes, use envoy for gateway, and add KEDA for autoscaling
+
 ### SUMMARY
 
 _auth_ dir -> contains simple logic API wich can consume GET, POST method <br />
