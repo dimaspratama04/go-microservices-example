@@ -4,7 +4,7 @@ metadata:
   name: backend-gateway
   namespace: backend
 spec:
-  gatewayClassName: eg
+  gatewayClassName: envoy-gateway-class
   listeners:
   - name: http
     port: 80
