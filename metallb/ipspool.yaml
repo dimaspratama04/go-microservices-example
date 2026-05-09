@@ -5,4 +5,4 @@ metadata:
   namespace: metallb
 spec:
   addresses:
-  - 192.168.139.160-192.168.139.165
+    - 192.168.139.160-192.168.139.165 # sesuaikan dengan ipspool di environment kalian
